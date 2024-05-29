@@ -72,6 +72,25 @@ class BinarySearchTree:
         self.root = self._put(self.root, label)
 
     def _put(self, node: Node | None, label: int, parent: Node | None = None) -> Node:
+        """
+        >>> t = BinarySearchTree()
+        >>> t.root = t._put(t.root, 10)
+        >>> assert t.root.parent is None
+        >>> assert t.root.label == 10
+
+        >>> t.root = t._put(t.root, 20, None)
+        >>> assert t.root.right.parent is t.root
+        >>> assert t.root.right.label == 20
+
+        >>> t.root = t._put(t.root, 5, None)
+        >>> assert t.root.left.parent is t.root
+        >>> assert t.root.left.label == 5
+
+        >>> t.root = t._put(t.root, 10)
+        Traceback (most recent call last):
+            ...
+        ValueError: Node with label 10 already exists
+        """
         if node is None:
             node = Node(label, parent)
         elif label < node.label:
@@ -102,6 +121,18 @@ class BinarySearchTree:
         return self._search(self.root, label)
 
     def _search(self, node: Node | None, label: int) -> Node:
+        """
+        >>> t = BinarySearchTree()
+        >>> t.put(10)
+        >>> t.put(20)
+        >>> t.put(5)
+        >>> t._search(t.root, 5).label
+        5
+        >>> t._search(t.root, 15).label
+        Traceback (most recent call last):
+            ...
+        ValueError: Node with label 15 does not exist
+        """
         if node is None:
             msg = f"Node with label {label} does not exist"
             raise ValueError(msg)
@@ -120,7 +151,10 @@ class BinarySearchTree:
         >>> t.put(8)
         >>> t.put(10)
         >>> t.remove(8)
-        >>> assert t.root.label == 10
+        >>> t.search(8)
+        Traceback (most recent call last):
+            ...
+        ValueError: Node with label 8 does not exist
 
         >>> t.remove(3)
         Traceback (most recent call last):
@@ -144,6 +178,18 @@ class BinarySearchTree:
             self._reassign_nodes(node, None)
 
     def _reassign_nodes(self, node: Node, new_children: Node | None) -> None:
+        """
+        >>> t = BinarySearchTree()
+        >>> t.put(10)
+        >>> t.put(5)
+        >>> t.put(15)
+        >>> t.put(20)
+        >>> t._reassign_nodes(t.search(20), None)
+        >>> t.search(20)
+        Traceback (most recent call last):
+            ...
+        ValueError: Node with label 20 does not exist
+        """
         if new_children:
             new_children.parent = node.parent
 
@@ -156,6 +202,20 @@ class BinarySearchTree:
             self.root = new_children
 
     def _get_lowest_node(self, node: Node) -> Node:
+        """
+        >>> t = BinarySearchTree()
+        >>> t._get_lowest_node(t.root)
+        Traceback (most recent call last):
+            ...
+        ValueError: Not a Binary Search Tree Node
+        >>> t.put(10)
+        >>> t.put(5)
+        >>> t.put(15)
+        >>> t.put(20)
+        >>> assert t._get_lowest_node(t.root).label == 5
+        """
+        if node is None:
+            raise ValueError("Not a Binary Search Tree Node")
         if node.left:
             lowest_node = self._get_lowest_node(node.left)
         else:
@@ -248,6 +308,20 @@ class BinarySearchTree:
         return self._inorder_traversal(self.root)
 
     def _inorder_traversal(self, node: Node | None) -> Iterator[Node]:
+        """
+        >>> t = BinarySearchTree()
+        >>> [x.label for x in t._inorder_traversal(t.root)]
+        []
+        >>> t.put(10)
+        >>> t.put(20)
+        >>> t.put(5)
+        >>> [x.label for x in t._inorder_traversal(t.root.left)]
+        [5]
+        >>> [x.label for x in t._inorder_traversal(t.root.right)]
+        [20]
+        >>> [x.label for x in t._inorder_traversal(t.root)]
+        [5, 10, 20]
+        """
         if node is not None:
             yield from self._inorder_traversal(node.left)
             yield node
@@ -270,6 +344,20 @@ class BinarySearchTree:
         return self._preorder_traversal(self.root)
 
     def _preorder_traversal(self, node: Node | None) -> Iterator[Node]:
+        """
+        >>> t = BinarySearchTree()
+        >>> [x.label for x in t._preorder_traversal(t.root)]
+        []
+        >>> t.put(10)
+        >>> t.put(20)
+        >>> t.put(5)
+        >>> [x.label for x in t._preorder_traversal(t.root.left)]
+        [5]
+        >>> [x.label for x in t._preorder_traversal(t.root.right)]
+        [20]
+        >>> [x.label for x in t._preorder_traversal(t.root)]
+        [10, 5, 20]
+        """
         if node is not None:
             yield node
             yield from self._preorder_traversal(node.left)
@@ -289,6 +377,40 @@ class BinarySearchTreeTest(unittest.TestCase):
             4   7 13
              \
               5
+        >>> t = BinarySearchTree()
+        >>> t.put(8)
+        >>> t.put(3)
+        >>> t.put(6)
+        >>> t.put(1)
+        >>> t.put(10)
+        >>> t.put(14)
+        >>> t.put(13)
+        >>> t.put(4)
+        >>> t.put(7)
+        >>> t.put(5)
+
+        >>> assert t.root.label == 8
+        >>> assert t.root.left.label == 3
+        >>> assert t.root.left.left.label == 1
+        >>> assert t.root.left.left.left is None
+        >>> assert t.root.left.left.right is None
+        >>> assert t.root.left.right.label == 6
+        >>> assert t.root.left.right.left.label == 4
+        >>> assert t.root.left.right.left.left is None
+        >>> assert t.root.left.right.left.right.label == 5
+        >>> assert t.root.left.right.left.right.left is None
+        >>> assert t.root.left.right.left.right.right is None
+        >>> assert t.root.left.right.right.label == 7
+        >>> assert t.root.left.right.right.left is None
+        >>> assert t.root.left.right.right.right is None
+
+        >>> assert t.root.right.label == 10
+        >>> assert t.root.right.left is None
+        >>> assert t.root.right.right.label == 14
+        >>> assert t.root.right.right.right is None
+        >>> assert t.root.right.right.left.label == 13
+        >>> assert t.root.right.right.left.left is None
+        >>> assert t.root.right.right.left.right is None
         """
         t = BinarySearchTree()
         t.put(8)
