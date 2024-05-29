@@ -45,11 +45,20 @@ def lowest_common_ancestor(
     u: int, v: int, level: list[int], parent: list[list[int]]
 ) -> int:
     """
-    >>> lowest_common_ancestor(2, 3, [-1, 0, 1, 1], create_sparse(3, breadth_first_search([-1 for x in range(4)], [[0 for _ in range(4)] for _ in range(20)], 3, {1 : [2,3], 2: [], 3: []}, 1)[1]))
+    >>> lowest_common_ancestor(2, 3, [-1, 0, 1, 1], create_sparse(3,
+    ... breadth_first_search([-1 for x in range(4)], [[0 for _ in
+    ... range(4)] for _ in range(20)], 3, {1 : [2,3], 2: [], 3: []},
+    ... 1)[1]))
     1
-    >>> lowest_common_ancestor(2, 1, [-1, 0, 1, 1], create_sparse(3, breadth_first_search([-1 for x in range(4)], [[0 for _ in range(4)] for _ in range(20)], 3, {1 : [2,3], 2: [], 3: []}, 1)[1]))
+    >>> lowest_common_ancestor(2, 1, [-1, 0, 1, 1], create_sparse(3,
+    ... breadth_first_search([-1 for x in range(4)], [[0 for _ in
+    ... range(4)] for _ in range(20)], 3, {1 : [2,3], 2: [], 3: []},
+    ... 1)[1]))
     1
-    >>> lowest_common_ancestor(1, 3, [-1, 0, 1, 1], create_sparse(3, breadth_first_search([-1 for x in range(4)], [[0 for _ in range(4)] for _ in range(20)], 3, {1 : [2,3], 2: [], 3: []}, 1)[1]))
+    >>> lowest_common_ancestor(1, 3, [-1, 0, 1, 1], create_sparse(3,
+    ... breadth_first_search([-1 for x in range(4)], [[0 for _ in
+    ... range(4)] for _ in range(20)], 3, {1 : [2,3], 2: [], 3: []},
+    ... 1)[1]))
     1
     """
     # u must be deeper in the tree than v
@@ -82,9 +91,14 @@ def breadth_first_search(
     sets every nodes direct parent
     parent of root node is set to 0
     calculates depth of each node from root node
-    >>> breadth_first_search([-1 for x in range(6)], [[0 for y in range(6)] for x in range(6)], 5, {1: [2, 3], 2:[4, 5], 3: [], 4:[], 5:[]})
-    ([-1, 0, 1, 1, 2, 2], [[0, 0, 1, 1, 2, 2], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
-    >>> breadth_first_search([-1 for x in range(4)], [[0 for y in range(4)] for x in range(4)], 3, {1: [2, 3], 2:[], 3: []})
+    >>> breadth_first_search([-1 for x in range(6)], [[0 for y in
+    ... range(6)] for x in range(6)], 5, {1: [2, 3], 2:[4, 5], 3:
+    ... [], 4:[], 5:[]})
+    ([-1, 0, 1, 1, 2, 2], [[0, 0, 1, 1, 2, 2], [0, 0, 0, 0, 0, 0], \
+[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], \
+[0, 0, 0, 0, 0, 0]])
+    >>> breadth_first_search([-1 for x in range(4)], [[0 for y in
+    ... range(4)] for x in range(4)], 3, {1: [2, 3], 2:[], 3: []})
     ([-1, 0, 1, 1], [[0, 0, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
     """
     level[root] = 0
